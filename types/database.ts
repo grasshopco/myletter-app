@@ -16,7 +16,7 @@ export type Newsletter = {
   updated_at: string;
 };
 
-export type Issue = {
+export type Letter = {
   id: string;
   newsletter_id: string;
   title: string;
@@ -39,7 +39,7 @@ export type Subscriber = {
 
 export type AiChatMessage = {
   id: string;
-  issue_id: string;
+  letter_id: string;
   role: 'user' | 'assistant';
   content: string;
   created_at: string;
@@ -48,7 +48,7 @@ export type AiChatMessage = {
 export type Database = {
   profiles: Profile;
   newsletters: Newsletter;
-  issues: Issue;
+  letters: Letter;
   subscribers: Subscriber;
   ai_chat_messages: AiChatMessage;
 };
