@@ -18,8 +18,8 @@ CREATE TABLE IF NOT EXISTS newsletters (
   updated_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
--- Create issues table
-CREATE TABLE IF NOT EXISTS issues (
+-- Create letters table
+CREATE TABLE IF NOT EXISTS letters (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   newsletter_id UUID REFERENCES newsletters(id) ON DELETE CASCADE NOT NULL,
   title TEXT NOT NULL,
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS subscribers (
 -- Create ai_chat_messages table
 CREATE TABLE IF NOT EXISTS ai_chat_messages (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  issue_id UUID REFERENCES issues(id) ON DELETE CASCADE NOT NULL,
+  letter_id UUID REFERENCES letters(id) ON DELETE CASCADE NOT NULL,
   role TEXT NOT NULL, -- user, assistant
   content TEXT NOT NULL,
   created_at TIMESTAMPTZ DEFAULT now() NOT NULL
@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS ai_chat_messages (
 -- Set up Row Level Security (RLS)
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE newsletters ENABLE ROW LEVEL SECURITY;
-ALTER TABLE issues ENABLE ROW LEVEL SECURITY;
+ALTER TABLE letters ENABLE ROW LEVEL SECURITY;
 ALTER TABLE subscribers ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ai_chat_messages ENABLE ROW LEVEL SECURITY;
 
@@ -77,31 +77,31 @@ CREATE POLICY "Users can update their own newsletters"
 CREATE POLICY "Users can delete their own newsletters" 
   ON newsletters FOR DELETE USING (auth.uid() = user_id);
 
-CREATE POLICY "Users can view their own issues" 
-  ON issues FOR SELECT USING (
+CREATE POLICY "Users can view their own letters" 
+  ON letters FOR SELECT USING (
     auth.uid() IN (
-      SELECT user_id FROM newsletters WHERE id = issues.newsletter_id
+      SELECT user_id FROM newsletters WHERE id = letters.newsletter_id
     )
   );
 
-CREATE POLICY "Users can create issues" 
-  ON issues FOR INSERT WITH CHECK (
+CREATE POLICY "Users can create letters" 
+  ON letters FOR INSERT WITH CHECK (
     auth.uid() IN (
-      SELECT user_id FROM newsletters WHERE id = issues.newsletter_id
+      SELECT user_id FROM newsletters WHERE id = letters.newsletter_id
     )
   );
 
-CREATE POLICY "Users can update their own issues" 
-  ON issues FOR UPDATE USING (
+CREATE POLICY "Users can update their own letters" 
+  ON letters FOR UPDATE USING (
     auth.uid() IN (
-      SELECT user_id FROM newsletters WHERE id = issues.newsletter_id
+      SELECT user_id FROM newsletters WHERE id = letters.newsletter_id
     )
   );
 
-CREATE POLICY "Users can delete their own issues" 
-  ON issues FOR DELETE USING (
+CREATE POLICY "Users can delete their own letters" 
+  ON letters FOR DELETE USING (
     auth.uid() IN (
-      SELECT user_id FROM newsletters WHERE id = issues.newsletter_id
+      SELECT user_id FROM newsletters WHERE id = letters.newsletter_id
     )
   );
 
@@ -137,8 +137,8 @@ CREATE POLICY "Users can view their own chat messages"
   ON ai_chat_messages FOR SELECT USING (
     auth.uid() IN (
       SELECT user_id FROM newsletters 
-      JOIN issues ON newsletters.id = issues.newsletter_id 
-      WHERE issues.id = ai_chat_messages.issue_id
+      JOIN letters ON newsletters.id = letters.newsletter_id 
+      WHERE letters.id = ai_chat_messages.letter_id
     )
   );
 
@@ -146,8 +146,8 @@ CREATE POLICY "Users can create chat messages"
   ON ai_chat_messages FOR INSERT WITH CHECK (
     auth.uid() IN (
       SELECT user_id FROM newsletters 
-      JOIN issues ON newsletters.id = issues.newsletter_id 
-      WHERE issues.id = ai_chat_messages.issue_id
+      JOIN letters ON newsletters.id = letters.newsletter_id 
+      WHERE letters.id = ai_chat_messages.letter_id
     )
   );
 
@@ -169,8 +169,8 @@ CREATE TRIGGER update_newsletters_modtime
     BEFORE UPDATE ON newsletters 
     FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
-CREATE TRIGGER update_issues_modtime 
-    BEFORE UPDATE ON issues 
+CREATE TRIGGER update_letters_modtime 
+    BEFORE UPDATE ON letters 
     FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
 CREATE TRIGGER update_subscribers_modtime 
