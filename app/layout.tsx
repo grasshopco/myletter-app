@@ -1,13 +1,13 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import { ThemeProvider } from '@/components/theme-provider';
+import { AuthProvider } from '@/contexts/auth-context';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'MyLetter - AI-Assisted Newsletter Platform',
-  description: 'A minimalist newsletter platform with AI-assisted content creation',
+  title: 'MyLetter - Modern Newsletter Platform',
+  description: 'Craft beautiful newsletters, build an audience, and connect with subscribers',
 };
 
 export default function RootLayout({
@@ -16,16 +16,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <body className={inter.className}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
+        <AuthProvider>
           {children}
-        </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );
