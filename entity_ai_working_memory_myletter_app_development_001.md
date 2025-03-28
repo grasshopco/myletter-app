@@ -38,7 +38,9 @@
 - GitHub repository created and initialized with basic project structure
 - Next.js project set up with TypeScript and TailwindCSS
 - Basic landing page implemented
-- Next steps: Database implementation in Supabase
+- Database schema created with proper table naming (letters, not issues)
+- Authentication flow implementation started
+- Next steps: Create Supabase project and set up UI components
 
 ## Design Vision
 - Clean, minimalist interface
@@ -81,6 +83,9 @@
 - GitHub repository setup (most subtasks)
 - Core application setup (initial tasks)
 - Landing page implementation (most subtasks)
+- Database schema design and implementation 
+- Authentication flow setup
+- Supabase client configuration
 
 ## Open Questions
 - Email sending infrastructure specifics
@@ -90,12 +95,17 @@
 - Landing page conversion optimization
 
 ## Next Steps
-- Create Supabase project
-- Implement database schema
-- Set up authentication tables
-- Configure row-level security
-- Implement Supabase client in Next.js
-- Set up authentication flow
+- Create Supabase project to use with the schema
+- Implement authentication UI components
+- Set up shadcn/ui components
+- Implement navigation structure
+- Begin TipTap editor implementation
+
+## Terminology Clarification
+- "Letters" (not "Issues") - Individual newsletter editions
+- "Newsletters" - Collections of letters that can be subscribed to
+- "Subscribers" - People who receive newsletters
+- "Writing Styles" - Saved preferences for AI writing assistance
 
 ## Reference Screenshots
 - Cursor IDE-like interface with split view
